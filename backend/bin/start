@@ -1,0 +1,9 @@
+#!/bin/sh
+
+# This script starts the Symfony development web server using Docker Compose.
+
+set -e
+
+echo "--- Starting Symfony development server on http://localhost:8080 ---"
+
+docker compose up -d --build 

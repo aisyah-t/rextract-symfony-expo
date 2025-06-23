@@ -1,0 +1,10 @@
+#!/bin/sh
+
+# This script is used to install the project's dependencies using Composer.
+# It runs composer via Docker Compose to avoid needing a local PHP setup.
+
+set -e # Exit script on any error
+
+echo "--- Installing Composer dependencies ---"
+
+docker run --rm -v $(pwd):/app -w /app composer install 
