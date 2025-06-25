@@ -1,0 +1,12 @@
+#!/bin/sh
+
+# This script starts the full-stack application (backend + frontend) using Docker Compose.
+
+set -e
+
+echo "--- Starting Rextract full-stack application ---"
+echo "--- Backend: http://localhost:8080 ---"
+echo "--- Frontend: http://localhost:8081 ---"
+echo "--- Press Ctrl+C to stop all services ---"
+
+docker compose up --build 

@@ -1,0 +1,11 @@
+#!/bin/sh
+
+# This script stops all containers and removes them.
+
+set -e
+
+echo "--- Stopping all Rextract services ---"
+
+docker compose down
+
+echo "--- All services stopped ---" 

@@ -6,10 +6,8 @@ This project is built as a learning exercise to gain experience with Symfony 6 a
 
 ## Project Structure
 
-This project is currently a backend-only implementation with plans for a frontend mobile application.
-
 -   `/backend`: A Symfony 6 application that serves as the API.
--   `/frontend`: An Expo (React Native) application (planned for future development).
+-   `/frontend`: An Expo (React Native) application (runs in Docker for local development).
 
 ## Technology Stack
 
@@ -22,9 +20,11 @@ This project is currently a backend-only implementation with plans for a fronten
 -   **Web Server:** Nginx
 -   **Application Server:** PHP-FPM 8.4
 
-### Frontend (Planned)
+### Frontend
 
 -   **Framework:** Expo (React Native)
+-   **Language:** TypeScript
+-   **Containerisation:** Docker with Docker Compose
 
 ## Architecture
 
@@ -33,7 +33,7 @@ This project is currently a backend-only implementation with plans for a fronten
 │                 │◄────────────────────────────►│                 │
 │   Frontend      │                              │   Backend       │
 │   (Expo App)    │                              │   (Symfony 6)   │
-│   (Planned)     │                              │                 │
+│                 │                              │                 │
 └─────────────────┘                              └─────────────────┘
                                                            │
                                                            ▼
@@ -85,7 +85,35 @@ You need a Docker client installed and running. Several options are available:
 -   [Podman](https://podman.io/) - A daemonless container engine
 -   [Lima](https://github.com/lima-vm/lima) - Linux virtual machines on macOS
 
-### Backend Setup
+### Quick Start (Recommended)
+
+1. **Build and start all services in development mode:**
+    ```bash
+    docker compose up --build
+    ```
+    
+    Or use the convenience script:
+    ```bash
+    ./bin/start
+    ```
+    
+    This will:
+    - Build and start all services (backend and frontend)
+    - Show real-time logs from all containers
+    - Display Expo CLI instructions and QR code
+    - Keep the terminal active for monitoring
+
+2. **Access your applications:**
+    - **Frontend (Expo):** Open your browser to [http://localhost:8081](http://localhost:8081)
+    - **Backend (Symfony):** Open your browser to [http://localhost:8080](http://localhost:8080)
+
+3. **Stop the application:**
+    - Press `Ctrl+C` in the terminal to stop all services
+    - Or use the convenience script: `./bin/stop`
+
+### Alternative: Backend-Only Setup
+
+If you only want to work on the backend:
 
 1.  **Navigate to the backend directory:**
     ```bash
@@ -116,6 +144,16 @@ You need a Docker client installed and running. Several options are available:
     ./bin/stop
     ```
 
+### Frontend-Only Setup
+
+If you only want to work on the frontend:
+
+```bash
+docker compose up frontend --build
+```
+
+This will start only the frontend service and show the Expo CLI output.
+
 ## Development
 
 ### Running Symfony Console Commands
@@ -124,13 +162,13 @@ All Symfony console commands should be run through Docker Compose using the `exe
 
 ```bash
 # List all available commands
-docker compose exec app php bin/console list
+docker compose exec backend-app php bin/console list
 
 # Clear cache
-docker compose exec app php bin/console cache:clear
+docker compose exec backend-app php bin/console cache:clear
 
 # Run any other Symfony command
-docker compose exec app php bin/console [command]
+docker compose exec backend-app php bin/console [command]
 ```
 
 ### Creating Entities
@@ -138,8 +176,8 @@ docker compose exec app php bin/console [command]
 To create new entities for your recipe extraction app:
 
 ```bash
-docker compose exec app php bin/console make:entity Recipe
-docker compose exec app php bin/console make:entity Ingredient
+docker compose exec backend-app php bin/console make:entity Recipe
+docker compose exec backend-app php bin/console make:entity Ingredient
 ```
 
 ### Database Migrations
@@ -147,9 +185,18 @@ docker compose exec app php bin/console make:entity Ingredient
 When you create or modify entities, generate and run migrations:
 
 ```bash
-docker compose exec app php bin/console make:migration
-docker compose exec app php bin/console doctrine:migrations:migrate
+docker compose exec backend-app php bin/console make:migration
+docker compose exec backend-app php bin/console doctrine:migrations:migrate
 ```
+
+### Making Frontend Changes
+
+- Any changes to the frontend code will be reflected automatically (hot reload)
+- If you add new dependencies, rebuild the frontend image:
+  ```bash
+  docker compose build frontend
+  docker compose up frontend
+  ```
 
 ## Current Status
 
@@ -159,6 +206,8 @@ docker compose exec app php bin/console doctrine:migrations:migrate
 -   Nginx web server configuration
 -   Development environment scripts
 -   Basic test endpoint at http://localhost:8080
+-   Expo React Native frontend running in Docker at http://localhost:8081
+-   Frontend-backend API communication with CORS configured
 
 ### 🚧 In Progress
 -   Entity creation for recipes and ingredients
@@ -168,7 +217,6 @@ docker compose exec app php bin/console doctrine:migrations:migrate
 ### 📋 Planned
 -   User authentication system
 -   Image processing and OCR integration
--   Expo React Native frontend
 -   Recipe photo capture and processing
 
 ## API Endpoints
