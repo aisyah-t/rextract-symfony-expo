@@ -38,6 +38,15 @@ WORKDIR /var/www/html
 RUN mkdir -p var/cache var/log \
  && chmod -R 777 var/cache var/log
 
+# Copy application code
+COPY . /var/www/html
+
+# Clean up cache to avoid stale files
+RUN rm -rf var/cache/*
+
+# Install PHP dependencies with Composer
+RUN composer install --no-interaction --prefer-dist --optimize-autoloader
+
 # Expose port 9000 for FPM
 EXPOSE 9000
 

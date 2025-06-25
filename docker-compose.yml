@@ -8,7 +8,6 @@ services:
       dockerfile: docker/php/Dockerfile
     volumes:
       - ./backend:/var/www/html:rw
-      - vendor-data:/var/www/html/vendor
     environment:
       - DATABASE_URL=postgresql://${POSTGRES_USER:-symfony}:${POSTGRES_PASSWORD:-ChangeMe}@backend-database:5432/${POSTGRES_DB:-app}
     depends_on:
@@ -57,7 +56,6 @@ services:
 
 volumes:
   db-data:
-  vendor-data:
 
 
 networks:
