@@ -118,13 +118,28 @@ You need a Docker client installed and running. Several options are available:
 
 ## Development
 
+### Running Symfony Console Commands
+
+All Symfony console commands should be run through Docker Compose using the `exec` command:
+
+```bash
+# List all available commands
+docker compose exec app php bin/console list
+
+# Clear cache
+docker compose exec app php bin/console cache:clear
+
+# Run any other Symfony command
+docker compose exec app php bin/console [command]
+```
+
 ### Creating Entities
 
 To create new entities for your recipe extraction app:
 
 ```bash
-docker-compose run --rm app php bin/console make:entity Recipe
-docker-compose run --rm app php bin/console make:entity Ingredient
+docker compose exec app php bin/console make:entity Recipe
+docker compose exec app php bin/console make:entity Ingredient
 ```
 
 ### Database Migrations
@@ -132,21 +147,9 @@ docker-compose run --rm app php bin/console make:entity Ingredient
 When you create or modify entities, generate and run migrations:
 
 ```bash
-docker-compose run --rm app php bin/console make:migration
-docker-compose run --rm app php bin/console doctrine:migrations:migrate
+docker compose exec app php bin/console make:migration
+docker compose exec app php bin/console doctrine:migrations:migrate
 ```
-
-### Useful Commands
-
--   **Clear cache:**
-    ```bash
-    docker-compose run --rm app php bin/console cache:clear
-    ```
-
--   **Run any Symfony console command:**
-    ```bash
-    docker-compose run --rm app php bin/console [command]
-    ```
 
 ## Current Status
 
