@@ -11,12 +11,10 @@
         "doctrine/doctrine-migrations-bundle": "^3.4",
         "doctrine/orm": "^3.4",
         "nelmio/cors-bundle": "^2.5",
-        "symfony/console": "6.4.*",
+        "psr/cache": "^3.0",
         "symfony/dotenv": "6.4.*",
         "symfony/flex": "^2",
-        "symfony/framework-bundle": "6.4.*",
         "symfony/runtime": "6.4.*",
-        "symfony/twig-bundle": "6.4.*",
         "symfony/yaml": "6.4.*"
     },
     "config": {
@@ -73,6 +71,12 @@
         }
     },
     "require-dev": {
+        "symfony/console": "6.4.*",
+        "symfony/framework-bundle": "6.4.*",
+        "symfony/maker-bundle": "*",
+        "symfony/process": "6.4.*",
+        "symfony/routing": "6.4.*",
+        "symfony/twig-bundle": "6.4.*",
         "symfony/web-profiler-bundle": "6.4.*"
     }
 }
