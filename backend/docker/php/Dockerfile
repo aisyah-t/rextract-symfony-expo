@@ -13,7 +13,8 @@ RUN apk add --no-cache \
  oniguruma-dev \
  freetype-dev \
  libjpeg-turbo-dev \
- libwebp-dev
+ libwebp-dev \
+ tesseract-ocr tesseract-ocr-data-eng
 
 # Install PHP extensions
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
