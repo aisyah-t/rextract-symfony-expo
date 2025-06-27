@@ -19,6 +19,9 @@ This project is built as a learning exercise to gain experience with Symfony 6 a
 -   **Containerisation:** Docker with Docker Compose
 -   **Web Server:** Nginx
 -   **Application Server:** PHP-FPM 8.4
+-   **OCR:** thiagoalessio/tesseract_ocr (PHP wrapper for Tesseract)
+-   **MIME Type Validation:** symfony/mime
+-   **CORS:** NelmioCorsBundle
 
 ### Frontend
 
@@ -29,7 +32,7 @@ This project is built as a learning exercise to gain experience with Symfony 6 a
 ## Architecture
 
 ```
-┌─────────────────┐    HTTP Request/Response    ┌─────────────────┐
+┌─────────────────┐    HTTP Request/Response     ┌─────────────────┐
 │                 │◄────────────────────────────►│                 │
 │   Frontend      │                              │   Backend       │
 │   (Expo App)    │                              │   (Symfony 6)   │
@@ -62,6 +65,17 @@ This project is built as a learning exercise to gain experience with Symfony 6 a
 4. Model queries database for data
 5. Data is serialized to JSON
 6. JSON response sent back to mobile app
+
+## Image Extraction Flow
+
+1. User selects an image in the Expo (React Native) app.
+2. The frontend handles both file URIs (native) and data URIs (web), converting data URIs to Blob/File as needed.
+3. The image is uploaded to the Symfony backend as multipart/form-data.
+4. The backend endpoint `/recipes/extract-recipe-from-image` receives the file, validates its type using symfony/mime, and processes it with Tesseract OCR.
+5. The extracted text is returned as a JSON response to the frontend.
+
+- CORS is handled by NelmioCorsBundle in Symfony. Nginx does not set CORS headers to avoid duplication.
+- The OCR endpoint is stateless and does not start a session (`#[DisableSession]`), while sessions are enabled globally for other endpoints.
 
 ## Getting Started
 
@@ -201,27 +215,24 @@ docker compose exec backend-app php bin/console doctrine:migrations:migrate
 ## Current Status
 
 ### ✅ Completed
--   Symfony 6.4.22 backend with Docker setup
--   PostgreSQL database integration
--   Nginx web server configuration
--   Development environment scripts
--   Basic test endpoint at http://localhost:8080
--   Expo React Native frontend running in Docker at http://localhost:8081
--   Frontend-backend API communication with CORS configured
+- Containerised the application (frontend, backend, and database) for full-stack local development using Docker Compose.
+- Entities and migrations for User, Recipe, Ingredient, and RecipeIngredient
+- **API:**  
+    - `POST /recipes/extract-recipe-from-image` — Upload image, receive OCR-extracted text (JSON)
+- **End-to-end image upload & OCR flow:**  
+    - Frontend: pick/upload image → backend API
+    - Backend: validate image, extract text with Tesseract OCR, return JSON
+- CORS managed by NelmioCorsBundle (not Nginx)
 
 ### 🚧 In Progress
--   Entity creation for recipes and ingredients
--   API endpoint development
--   Recipe extraction logic
+- TBD
 
 ### 📋 Planned
--   User authentication system
--   Image processing and OCR integration
--   Recipe photo capture and processing
+- Additional image processing enhancements e.g. parsing extracted text and mapping to entities
+- Saving parsed text to the database
+- Further API endpoint development (GET, PUT/PATCH)
+- UI for displaying and editing extracted recipes
+- User authentication system
+- UI for user login and sign up
 
-## API Endpoints
 
-Currently available:
--   `GET /` - Test endpoint returning JSON response
-
-More endpoints will be added as the application develops.
