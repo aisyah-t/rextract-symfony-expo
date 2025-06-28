@@ -1,7 +1,4 @@
-FROM node:18-alpine
-
-# Install Expo CLI globally
-RUN npm install -g @expo/cli
+FROM node:22-alpine
 
 # Set working directory
 WORKDIR /app
@@ -19,4 +16,4 @@ COPY . .
 EXPOSE 8081
 
 # Start Expo development server
-CMD ["npx", "expo", "start", "--web", "--port", "8081", "--host", "localhost"] 
+CMD ["npm", "start"] 
