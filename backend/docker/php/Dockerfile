@@ -39,17 +39,24 @@ WORKDIR /var/www/html
 RUN mkdir -p var/cache var/log \
  && chmod -R 777 var/cache var/log
 
-# Copy application code
+# Copy startup script
+COPY docker/php/start.sh /usr/local/bin/start.sh
+RUN chmod +x /usr/local/bin/start.sh
+
+# Copy composer files first
+COPY composer.json composer.lock ./
+
+# Install PHP dependencies with Composer (skip post-install scripts during build)
+RUN composer install --no-interaction --prefer-dist --optimize-autoloader --no-scripts
+
+# Copy application code (after installing dependencies)
 COPY . /var/www/html
 
 # Clean up cache to avoid stale files
 RUN rm -rf var/cache/*
 
-# Install PHP dependencies with Composer
-RUN composer install --no-interaction --prefer-dist --optimize-autoloader
-
 # Expose port 9000 for FPM
 EXPOSE 9000
 
-# Start PHP-FPM
-CMD ["php-fpm"] 
+# Use startup script
+CMD ["/usr/local/bin/start.sh"] 
