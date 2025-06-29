@@ -43,13 +43,7 @@ RUN mkdir -p var/cache var/log \
 COPY docker/php/start.sh /usr/local/bin/start.sh
 RUN chmod +x /usr/local/bin/start.sh
 
-# Copy composer files first
-COPY composer.json composer.lock ./
-
-# Install PHP dependencies with Composer (skip post-install scripts during build)
-RUN composer install --no-interaction --prefer-dist --optimize-autoloader --no-scripts
-
-# Copy application code (after installing dependencies)
+# Copy all application code
 COPY . /var/www/html
 
 # Clean up cache to avoid stale files
